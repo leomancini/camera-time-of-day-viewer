@@ -44,7 +44,7 @@ function getImagesForSunTime(type) {
     sliders.classList.add('disabled');
 
     fetch(
-        `getImagesForSun.php?type=${type}`
+        `getImagesForSunTime.php?type=${type}`
     ).then(
         response => response.json()
     ).then(
