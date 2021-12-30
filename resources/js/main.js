@@ -129,4 +129,8 @@ sliders.onmouseover = function() {
     sliders.classList.remove('disabled');
 }
 
+sliders.ontouchstart = function() {
+    sliders.classList.remove('disabled');
+}
+
 getImagesForTimeOfDay();
