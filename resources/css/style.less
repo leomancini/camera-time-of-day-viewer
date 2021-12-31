@@ -50,6 +50,7 @@ html, body {
 			display: inline-block;
 			transition: all 0.25s;
             height: @controls-height;
+			margin-right: 40px;
             
             @media @mobile {
                 width: 100%;
@@ -91,23 +92,18 @@ html, body {
 
 		#buttons {
 			display: inline-block;
-			margin-left: 40px;
             height: @controls-height;
             font-size: 0;
-
-            @media only screen and (max-width: 1188px) {
-                margin: 20px 0 0 0;
-                height: fit-content;
-                width: 100vw;
+            
+            @media @mobile {
+                margin: 20px 0 20px 0;
                 overflow: scroll;
+                width: 100vw;
+                height: fit-content;
 
                 &::-webkit-scrollbar {
                     display: none;
                 }
-            }
-
-            @media @mobile {
-                margin: 20px 0 20px 0;
             }
 
             #buttonsSet {
