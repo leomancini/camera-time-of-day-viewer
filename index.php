@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Every Day</title>
-		<link rel='stylesheet/less' href='resources/css/style.less'>
+		<link rel='stylesheet/less' href='resources/css/style.less?nocache=132543657'>
 		<script src='//cdnjs.cloudflare.com/ajax/libs/less.js/3.11.1/less.min.js'></script>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 	</head>
