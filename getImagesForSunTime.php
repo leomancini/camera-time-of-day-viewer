@@ -37,5 +37,7 @@
         array_push($images, $CONFIG['SERVER']."/".$CONFIG['IMG_PATH']."/$date.jpg");
     }
 
+    $images = array_reverse($images); // Sort by date, reverse chronological
+
     echo json_encode($images);
 ?>
