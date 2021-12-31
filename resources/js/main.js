@@ -9,7 +9,7 @@ function updateImages(images) {
         const label = document.createElement('label');
         const filename = image.split('/');
         let dateParts = filename[filename.length-1].split('.jpg').join('').split('-');
-        let date = new Date(Date.parse(`${dateParts[0]}-${dateParts[1]}-${dateParts[2]} ${dateParts[3]}:${dateParts[4]}`));
+        let date = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${dateParts[3]}:${dateParts[4]}`);
 
         label.innerHTML = `${date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' })}`;
 
@@ -19,7 +19,9 @@ function updateImages(images) {
             thumbnailWrapper.appendChild(label);
         }
         imageElement.onerror = () => {
-            thumbnailWrapper.parentNode.removeChild(thumbnailWrapper);
+            if (thumbnailWrapper) {
+                thumbnailWrapper.parentNode.removeChild(thumbnailWrapper);
+            }
         }
         thumbnailWrapper.appendChild(imageElement);
 
