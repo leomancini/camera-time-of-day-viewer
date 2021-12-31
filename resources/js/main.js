@@ -96,6 +96,12 @@ function zeroPad(num, places) {
     return String(num).padStart(places, '0'); // From https://stackoverflow.com/a/2998874
 }
 
+function removeSelectedStateFromAllButtons() {
+    document.querySelectorAll('button').forEach((button) => {
+        button.classList.remove('selected');
+    });
+}
+
 const imageElementsWrapper = document.querySelector('#images');
 const loadingSpinner = document.querySelector('#spinner');
 
@@ -113,32 +119,16 @@ hourSlider.oninput = function() {
     hourOutput.innerHTML = this.value;
 
     getImagesForTimeOfDay();
+
+    removeSelectedStateFromAllButtons();
 }
 
 minuteSlider.oninput = function() {
     minuteOutput.innerHTML = this.value;
 
     getImagesForTimeOfDay();
-}
 
-document.querySelector('button#sunrise').onclick = function() {
-    getImagesForSunTime('sunrise');
-}
-
-document.querySelector('button#sunset').onclick = function() {
-    getImagesForSunTime('sunset');
-}
-
-document.querySelector('button#solar_noon').onclick = function() {
-    getImagesForSunTime('solar_noon');
-}
-
-document.querySelector('button#civil_twilight_begin').onclick = function() {
-    getImagesForSunTime('civil_twilight_begin');
-}
-
-document.querySelector('button#civil_twilight_end').onclick = function() {
-    getImagesForSunTime('civil_twilight_end');
+    removeSelectedStateFromAllButtons();
 }
 
 sliders.onmouseover = function() {
@@ -148,5 +138,15 @@ sliders.onmouseover = function() {
 sliders.ontouchstart = function() {
     sliders.classList.remove('disabled');
 }
+
+document.querySelectorAll('#controls #buttons button').forEach((button) => {
+    button.onclick = function() {
+        getImagesForSunTime(this.getAttribute('id'));
+
+        removeSelectedStateFromAllButtons();
+
+        this.classList.add('selected');
+    }
+});
 
 getImagesForTimeOfDay();
