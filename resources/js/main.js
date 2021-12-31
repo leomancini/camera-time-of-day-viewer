@@ -78,14 +78,14 @@ function updateTitle(type, data) {
     switch (type) {
         case 'time':
             time.innerHTML = `${data.hour}:${data.minute}`;
-
+            
             document.title = `Every Day at ${data.hour}:${data.minute}`;
         break;
         case 'sun':
             const label = document.querySelector(`button#${data.type}`).innerHTML;
             time.innerHTML = `${label.toUpperCase()}`;
 
-            document.title = `Every Day at ${label.toUpperCase()}${label.slice(1)}`;
+            document.title = `Every Day at ${label[0].toUpperCase()}${label.slice(1)}`;
         break;
     }
 }
