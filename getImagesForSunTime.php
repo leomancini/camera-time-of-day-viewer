@@ -21,7 +21,7 @@
 
     foreach ($period as $dt) {
         $request = curl_init();
-        curl_setopt($request, CURLOPT_URL, "http://api.sunrise-sunset.org/json?lat=".$location['lat']."&lng=".$location['lng']."&date=".$dt->format("Y-m-d"));
+        curl_setopt($request, CURLOPT_URL, $CONFIG['SUNSET_API_PROXY_URL']."?lat=".$location['lat']."&lng=".$location['lng']."&date=".$dt->format("Y-m-d"));
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
         $results = curl_exec($request);
         curl_close($request);
