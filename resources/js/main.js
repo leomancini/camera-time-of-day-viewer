@@ -1,7 +1,5 @@
 
 function updateImages(images) {
-    imageElementsWrapper.innerHTML = '';
-
     images.map((image) => {
         const thumbnailWrapper = document.createElement('div'); 
         thumbnailWrapper.classList.add('thumbnailWrapper');
@@ -15,14 +13,17 @@ function updateImages(images) {
 
         const imageElement = new Image();
         imageElement.src = image;
+
         imageElement.onload = () => {
             thumbnailWrapper.appendChild(label);
         }
+
         imageElement.onerror = () => {
             if (thumbnailWrapper) {
                 thumbnailWrapper.parentNode.removeChild(thumbnailWrapper);
             }
         }
+
         thumbnailWrapper.appendChild(imageElement);
 
         imageElementsWrapper.appendChild(thumbnailWrapper);
@@ -30,48 +31,77 @@ function updateImages(images) {
 
     imageElementsWrapper.classList.remove('loading');
     loadingSpinner.classList.remove('loading');
+    loadingSpinner.classList.remove('initialLoad');
+    loadingBottomGradient.classList.remove('loading');
+
+    if (imageElementsWrapper.getBoundingClientRect().bottom <= window.innerHeight) {
+        setTimeout(() => {
+            lazyLoadImages();
+        }, 500);
+    }
 }
 
-function getImagesForTimeOfDay() {
+function getImagesForTimeOfDay(params) {
+    window.currentlyLoading = true;
+    window.imagesType = 'TimeOfDay';
+
     let hour = zeroPad(parseInt(hourOutput.innerHTML), 2);
     let minute = zeroPad(parseInt(minuteOutput.innerHTML), 2);
 
     imageElementsWrapper.classList.add('loading');
     loadingSpinner.classList.add('loading');
+    loadingBottomGradient.classList.add('loading');
     
     fetch(
-        `getImagesForTimeOfDay.php?h=${hour}&m=${minute}`
+        `getImagesForTimeOfDay.php?h=${hour}&m=${minute}&page=${params.page}`
     ).then(
         response => response.json()
     ).then(
         images => {
-            updateImages(images);
+            if (images.length > 0) {
+                updateImages(images);
+            } else {
+                window.allImagesLoaded = true;
+                imageElementsWrapper.classList.remove('loading');
+                loadingSpinner.classList.remove('loading');
+                loadingBottomGradient.classList.remove('loading');
+            }
+
+            window.currentlyLoading = false;
         }
     ).catch((error) => {
         console.error('Error:', error);
+        window.currentlyLoading = false;
     });
 
     updateTitle('time', { hour, minute });
 }
 
-function getImagesForSunTime(type) {
+function getImagesForSunTime(params) {
+    window.currentlyLoading = true;
+    window.imagesType = 'SunTime';
+    window.sunTimeType = params.type;
+
     imageElementsWrapper.classList.add('loading');
     loadingSpinner.classList.add('loading');
+    loadingBottomGradient.classList.add('loading');
     sliders.classList.add('disabled');
 
     fetch(
-        `getImagesForSunTime.php?type=${type}`
+        `getImagesForSunTime.php?type=${params.type}&page=${params.page}`
     ).then(
         response => response.json()
     ).then(
         images => {
             updateImages(images);
+            window.currentlyLoading = false;
         }
     ).catch((error) => {
         console.error('Error:', error);
+        window.currentlyLoading = false;
     });
 
-    updateTitle('sun', { type });
+    updateTitle('sun', { type: params.type });
 }
 
 function updateTitle(type, data) {
@@ -104,6 +134,7 @@ function removeSelectedStateFromAllButtons() {
 
 const imageElementsWrapper = document.querySelector('#images');
 const loadingSpinner = document.querySelector('#spinner');
+const loadingBottomGradient = document.querySelector('#loadingBottomGradient');
 
 const sliders = document.querySelector('#sliders');
 const hourSlider = document.querySelector('.slider#hour');
@@ -118,7 +149,8 @@ minuteOutput.innerHTML = minuteSlider.value;
 hourSlider.oninput = function() {
     hourOutput.innerHTML = this.value;
 
-    getImagesForTimeOfDay();
+    clearImages();
+    getImagesForTimeOfDay({ page: 0 });
 
     removeSelectedStateFromAllButtons();
 }
@@ -126,7 +158,8 @@ hourSlider.oninput = function() {
 minuteSlider.oninput = function() {
     minuteOutput.innerHTML = this.value;
 
-    getImagesForTimeOfDay();
+    clearImages();
+    getImagesForTimeOfDay({ page: 0 });
 
     removeSelectedStateFromAllButtons();
 }
@@ -139,9 +172,22 @@ sliders.ontouchstart = function() {
     sliders.classList.remove('disabled');
 }
 
+function clearImages() {
+    window.allImagesLoaded = false;
+    window.page = 0;
+    window.sunTimeType = null;
+    loadingSpinner.classList.add('initialLoad');
+
+    imageElementsWrapper.innerHTML = '';
+}
+
 document.querySelectorAll('#controls #buttons button').forEach((button) => {
     button.onclick = function() {
-        getImagesForSunTime(this.getAttribute('id'));
+        clearImages();
+        getImagesForSunTime({
+            type: this.getAttribute('id'),
+            page: 0
+        });
 
         removeSelectedStateFromAllButtons();
 
@@ -149,4 +195,29 @@ document.querySelectorAll('#controls #buttons button').forEach((button) => {
     }
 });
 
-getImagesForTimeOfDay();
+window.allImagesLoaded = false;
+window.page = 0;
+window.imagesType = 'TimeOfDay';
+window.sunTimeType = null;
+window.currentlyLoading = false;
+
+function lazyLoadImages() {
+    if (!window.allImagesLoaded && !window.currentlyLoading) {
+        if (Math.round(window.innerHeight + window.scrollY) >= Math.round(document.body.offsetHeight)) {
+            window.page = window.page + 1;
+            console.log('load MORE');
+            if (window.imagesType === 'TimeOfDay') {
+                getImagesForTimeOfDay({ page: window.page });
+            } else if (window.imagesType = 'SunTime') {
+                getImagesForSunTime({
+                    type: window.sunTimeType,
+                    page: window.page
+                });
+            }
+        }
+    }
+}
+
+window.onscroll = lazyLoadImages;
+
+getImagesForTimeOfDay({ page: 0 });

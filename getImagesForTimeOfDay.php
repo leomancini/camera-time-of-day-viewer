@@ -23,5 +23,13 @@
 
     $images = array_reverse($images); // Sort by date, reverse chronological
 
-    echo json_encode($images);
+    if (isset($_GET['page'])) {
+        $perPage = 12;
+
+        $pageOfImages = array_slice($images, intval($_GET['page']) * $perPage, $perPage);
+
+        echo json_encode($pageOfImages);
+    } else {
+        echo json_encode($images);
+    }
 ?>

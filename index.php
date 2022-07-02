@@ -24,7 +24,8 @@
                 </div>
             </div>
         </div>
-        <div id='spinner'></div>
+        <div id='spinner' class='initialLoad'></div>
+        <div id='loadingBottomGradient'></div>
         <div id='images'></div>
         <script src='resources/js/main.js'></script>
     </body>
