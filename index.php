@@ -17,10 +17,8 @@
                 <div id='buttonsSet'>
                     <button id='sunrise'>Sunrise</button>
                     <button id='civil_twilight_begin'>Twilight AM</button>
-                    <button id='solar_noon'>Solar Noon</button>
                     <button id='civil_twilight_end'>Twilight PM</button>
                     <button id='sunset'>Sunset</button>
-                    <small>Powered by <a href='https://sunrise-sunset.org/api' target='_blank'>Sunrise-Sunset API</a></small>
                 </div>
             </div>
         </div>
