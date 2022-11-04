@@ -26,7 +26,7 @@
     $dates = array_reverse($dates); // Sort by date, reverse chronological
 
     if (isset($_GET['page'])) {
-        $perPage = 6;
+        $perPage = 15;
 
         $pageOfDates = array_slice($dates, intval($_GET['page']) * $perPage, $perPage);
 

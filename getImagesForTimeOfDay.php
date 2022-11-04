@@ -24,7 +24,7 @@
     $images = array_reverse($images); // Sort by date, reverse chronological
 
     if (isset($_GET['page'])) {
-        $perPage = 12;
+        $perPage = 15;
 
         $pageOfImages = array_slice($images, intval($_GET['page']) * $perPage, $perPage);
 
