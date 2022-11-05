@@ -3,11 +3,6 @@
 
     date_default_timezone_set('America/New_York');
 
-    $location = [
-        'lat' => '40.730610',
-        'lng' => '-73.935242'
-    ];
-
     $type = $_GET['type'];
 
     // Based on https://stackoverflow.com/a/3207849
